@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaQuestionCircle } from 'react-icons/fa'
+import { FaQuestionCircle, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import Footer from '../landing/Footer'
 
 export default function Hero() {
@@ -70,12 +70,104 @@ export default function Hero() {
   ]
 
   const [activeTag, setActiveTag] = useState("All")
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 6
 
   const filteredQuizzes = activeTag === "All"
     ? quizzes
     : quizzes.filter(quiz => quiz.tags.includes(activeTag))
 
+  const totalPages = Math.ceil(filteredQuizzes.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentQuizzes = filteredQuizzes.slice(startIndex, endIndex)
+
   const allTags = ["All", ...new Set(quizzes.flatMap(q => q.tags))]
+
+  // Reset to page 1 when filter changes
+  const handleTagChange = (tag) => {
+    setActiveTag(tag)
+    setCurrentPage(1)
+  }
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+    // Scroll to top of quiz section
+    document.getElementById('quiz-section')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const Pagination = () => {
+    if (totalPages <= 1) return null
+
+    const getPageNumbers = () => {
+      const pages = []
+      const maxVisiblePages = 5
+
+      if (totalPages <= maxVisiblePages) {
+        for (let i = 1; i <= totalPages; i++) {
+          pages.push(i)
+        }
+      } else {
+        if (currentPage <= 3) {
+          pages.push(1, 2, 3, 4, '...', totalPages)
+        } else if (currentPage >= totalPages - 2) {
+          pages.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
+        } else {
+          pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages)
+        }
+      }
+
+      return pages
+    }
+
+    return (
+      <div className="flex justify-center items-center space-x-2 mt-8">
+        {/* Previous button */}
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`p-2 rounded-lg ${
+            currentPage === 1
+              ? 'text-gray-400 cursor-not-allowed'
+              : 'text-gray-600 hover:bg-gray-100'
+          }`}
+        >
+          <FaChevronLeft />
+        </button>
+
+        {/* Page numbers */}
+        {getPageNumbers().map((page, index) => (
+          <button
+            key={index}
+            onClick={() => typeof page === 'number' && handlePageChange(page)}
+            disabled={page === '...'}
+            className={`px-3 py-2 rounded-lg text-sm font-medium ${
+              page === currentPage
+                ? 'bg-blue-600 text-white'
+                : page === '...'
+                ? 'text-gray-400 cursor-default'
+                : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            {page}
+          </button>
+        ))}
+
+        {/* Next button */}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={`p-2 rounded-lg ${
+            currentPage === totalPages
+              ? 'text-gray-400 cursor-not-allowed'
+              : 'text-gray-600 hover:bg-gray-100'
+          }`}
+        >
+          <FaChevronRight />
+        </button>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -122,34 +214,44 @@ export default function Hero() {
       </section>
 
       {/* Seção Play Quizzes */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-8 my-16">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">Play Quizzes</h2>
+      <section id="quiz-section" className="max-w-7xl mx-auto px-6 lg:px-8 my-16">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900">Play Quizzes</h2>
+          <div className="text-sm text-gray-600">
+            Showing {startIndex + 1}-{Math.min(endIndex, filteredQuizzes.length)} of {filteredQuizzes.length} quizzes
+          </div>
+        </div>
 
         <div className="flex">
           {/* Grid de quizzes */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 flex-1">
-            {filteredQuizzes.map((quiz) => (
-              <div key={quiz.id} className="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
-                <img src={quiz.image} alt={quiz.title} className="w-full h-48 object-cover" />
-                <div className="p-4 flex flex-col space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-800">{quiz.title}</h3>
-                  <p className="text-sm text-gray-600">{quiz.description}</p>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {quiz.tags.map(tag => (
-                      <span key={tag} className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">{tag}</span>
-                    ))}
-                  </div>
-                  <div className="flex space-x-2 mt-2">
-                    <button className="flex-1 px-3 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">
-                      Play
-                    </button>
-                    <button className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 font-semibold rounded hover:bg-gray-100 transition">
-                      See More
-                    </button>
+          <div className="flex-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+              {currentQuizzes.map((quiz) => (
+                <div key={quiz.id} className="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
+                  <img src={quiz.image} alt={quiz.title} className="w-full h-48 object-cover" />
+                  <div className="p-4 flex flex-col space-y-2">
+                    <h3 className="text-lg font-semibold text-gray-800">{quiz.title}</h3>
+                    <p className="text-sm text-gray-600">{quiz.description}</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {quiz.tags.map(tag => (
+                        <span key={tag} className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded-full">{tag}</span>
+                      ))}
+                    </div>
+                    <div className="flex space-x-2 mt-2">
+                      <button className="flex-1 px-3 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">
+                        Play
+                      </button>
+                      <button className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 font-semibold rounded hover:bg-gray-100 transition">
+                        See More
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {/* Pagination Component */}
+            <Pagination />
           </div>
 
           {/* Painel de filtragem */}
@@ -159,7 +261,7 @@ export default function Hero() {
               {allTags.map(tag => (
                 <button
                   key={tag}
-                  onClick={() => setActiveTag(tag)}
+                  onClick={() => handleTagChange(tag)}
                   className={`px-3 py-1 rounded-full text-sm font-medium transition ${
                     activeTag === tag ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}

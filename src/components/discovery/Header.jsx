@@ -39,9 +39,6 @@ const Header = () => {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
       }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -119,14 +116,14 @@ const Header = () => {
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             <motion.button
-              className="font-poppins text-gray-700 hover:text-blue-700 transition-colors duration-200"
+              className="font-poppins text-blue-500 border-2 border-blue-400 px-6 py-2 rounded-md hover:text-blue-700 transition-colors duration-200"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               Login
             </motion.button>
             <motion.button
-              className="bg-blue-700 text-white px-6 py-2 rounded-full font-poppins font-medium hover:bg-blue-800 transition-all duration-200 shadow-md hover:shadow-lg"
+              className="bg-blue-500 text-white px-6 py-2  font-poppins font-medium hover:bg-blue-600 rounded-md transition-all duration-200 shadow-md hover:shadow-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
