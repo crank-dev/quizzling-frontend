@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { FaQuestionCircle, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
-import Footer from '../landing/Footer'
+import Footer from './Footer'
 
 export default function Hero() {
   const quizzes = [

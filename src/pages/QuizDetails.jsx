@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaPlay, FaEllipsisH, FaShareAlt, FaFlag, FaHeart, FaUserPlus, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import Header from "../components/discovery/Header";
-import Footer from "../components/landing/Footer";
+import Footer from "../components/discovery/Footer";
 
 const quiz = {
   id: 1,

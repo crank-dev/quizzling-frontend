@@ -48,7 +48,7 @@ const Header = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <img src="src/assets/icon.png" alt="Quizzling Logo" className="h-10 w-10 object-contain mr-2" />
+            <img src="src/assets/icon.png" className="w-8" />
             <span className="font-outfit font-bold text-xl text-gray-900">Quizzling</span>
           </motion.div>
 
@@ -123,7 +123,7 @@ const Header = () => {
               Login
             </motion.button>
             <motion.button
-              className="bg-blue-500 text-white px-6 py-2  font-poppins font-medium hover:bg-blue-600 rounded-md transition-all duration-200 shadow-md hover:shadow-lg"
+              className="bg-blue-500 text-white px-6 py-2 font-poppins font-medium hover:bg-blue-600 rounded-md transition-all duration-200 shadow-md hover:shadow-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

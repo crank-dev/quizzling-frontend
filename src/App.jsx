@@ -14,6 +14,7 @@ export default function App() {
         <Route path="/quiz" element={<QuizPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/discovery" element={<DiscoveryPage />} />
         <Route path="/quiz/:id" element={<QuizDetailPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
